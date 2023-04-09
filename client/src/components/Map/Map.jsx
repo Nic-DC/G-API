@@ -1,28 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
 import { Paper, Typography, useMediaQuery } from "@mui/material";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import Rating from "@mui/material/Rating";
 // import mapStyles from "../../mapStyles";
+
 import { MapContainer, markerContainer, paper, pointer } from "./styles";
 
-const Map = () => {
+const Map = ({ coordinates, setCoordinates, setBounds }) => {
   const matches = useMediaQuery("(min-width:600px)");
-  const coordinates = { lat: 0, lng: 0 };
+  //const coord = { lat: 46, lng: 26 };
+  // const [coordinates, setCoordinates] = useState(null);
+
+  // useEffect(() => {
+  //   setCoordinates({ lat: 46, lng: 26 });
+  // }, []);
   return (
-    <MapContainer>
-      <GoogleMapReact
-        // bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}
-        bootstrapURLKeys={{ key: "AIzaSyCtvoQjuT-dfr5-0yYGZyg_YSaW5OC6t-0" }}
-        defaultCenter={coordinates}
-        center={coordinates}
-        defaultZoom={14}
-        margin={[50, 50, 50, 50]}
-        options={""}
-        onChange={""}
-        onChildClick={""}
-      ></GoogleMapReact>
-    </MapContainer>
+    <>
+      {" "}
+      {coordinates && (
+        <MapContainer>
+          <GoogleMapReact
+            // bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}
+            bootstrapURLKeys={{ key: "AIzaSyCtvoQjuT-dfr5-0yYGZyg_YSaW5OC6t-0" }}
+            defaultCenter={coordinates}
+            center={coordinates}
+            defaultZoom={14}
+            margin={[50, 50, 50, 50]}
+            // options={""}
+            onChange={(e) => {
+              console.log(`EVENT: `, e);
+              setCoordinates({ lat: e.center.lat, lng: e.center.lng });
+              setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
+            }}
+            // onChildClick={""}
+          ></GoogleMapReact>
+        </MapContainer>
+      )}
+    </>
   );
 };
 
