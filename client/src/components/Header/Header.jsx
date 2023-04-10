@@ -18,14 +18,14 @@ const Header = ({ onPlaceChanged, onLoad }) => {
           <Typography variant="h6" display={{ xs: "none", sm: "block" }}>
             Explore new places
           </Typography>
-          {/* <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}> */}
-          <SearchBox>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <Input placeholder="Search…" />
-          </SearchBox>
-          {/* </Autocomplete> */}
+          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+            <SearchBox>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <Input placeholder="Search…" />
+            </SearchBox>
+          </Autocomplete>
         </Box>
       </ToolbarStyled>
     </AppBar>

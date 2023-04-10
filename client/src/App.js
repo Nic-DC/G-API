@@ -18,13 +18,18 @@ const darkTheme = createTheme({
 });
 
 const App = () => {
-  const [places, setData] = useState([]);
+  const [places, setPlaces] = useState([]);
   console.log(`Fetched PLACES: `, places);
+
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
+  console.log(`Fetched FILTERED PLACES: `, filteredPlaces);
 
   const [coordinates, setCoordinates] = useState({});
   console.log(`COORDINATES: `, coordinates);
 
   const [bounds, setBounds] = useState({});
+
+  const [wheaterData, setWeatherData] = useState();
 
   const [childClicked, setChildClicked] = useState(null);
 
@@ -40,16 +45,23 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    const filteredPlaces = places.filter((place) => place.rating > rating);
+    setFilteredPlaces(filteredPlaces);
+  }, [rating]);
+
+  useEffect(() => {
     setIsLoading(true);
+    if (bounds.sw && bounds.ne) {
+      const fetchData = async () => {
+        const response = await getPlacesData(type, bounds.sw, bounds.ne);
+        setPlaces(response.data.data?.filter((place) => place.name && place.num_reviews > 0));
+        setFilteredPlaces([]);
+        setIsLoading(false);
+      };
 
-    const fetchData = async () => {
-      const response = await getPlacesData(type, bounds.sw, bounds.ne);
-      setData(response.data.data);
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, [type, coordinates, bounds]);
+      fetchData();
+    }
+  }, [type, bounds]);
   return (
     <>
       <ThemeProvider theme={darkTheme}>
@@ -59,7 +71,7 @@ const App = () => {
         <Grid container spacing={3} style={{ width: "100%" }}>
           <Grid item xs={12} md={4}>
             <List
-              places={places}
+              places={filteredPlaces.lenght ? filteredPlaces : places}
               childClicked={childClicked}
               isLoading={isLoading}
               type={type}
@@ -74,7 +86,7 @@ const App = () => {
               coordinates={coordinates}
               setCoordinates={setCoordinates}
               setBounds={setBounds}
-              places={places}
+              places={filteredPlaces.lenght ? filteredPlaces : places}
               setChildClicked={setChildClicked}
             />
           </Grid>
