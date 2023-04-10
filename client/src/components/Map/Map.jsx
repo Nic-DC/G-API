@@ -7,14 +7,9 @@ import Rating from "@mui/material/Rating";
 
 import { MapContainer, markerContainer, paper, pointer } from "./styles";
 
-const Map = ({ coordinates, setCoordinates, setBounds }) => {
+const Map = ({ coordinates, setCoordinates, setBounds, places, setChildClicked }) => {
   const matches = useMediaQuery("(min-width:600px)");
-  //const coord = { lat: 46, lng: 26 };
-  // const [coordinates, setCoordinates] = useState(null);
 
-  // useEffect(() => {
-  //   setCoordinates({ lat: 46, lng: 26 });
-  // }, []);
   return (
     <>
       {" "}
@@ -33,8 +28,39 @@ const Map = ({ coordinates, setCoordinates, setBounds }) => {
               setCoordinates({ lat: e.center.lat, lng: e.center.lng });
               setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
             }}
-            // onChildClick={""}
-          ></GoogleMapReact>
+            onChildClick={(child) => setChildClicked(child)}
+          >
+            {places?.map((place, i) => (
+              <div
+                className={markerContainer}
+                lat={Number(place.latitude)}
+                lng={Number(place.longitude)}
+                $hover="false"
+                key={i}
+              >
+                {!matches ? (
+                  <LocationOnOutlinedIcon color="primary" fontSize="large" />
+                ) : (
+                  <Paper elevation={3} className={paper.root}>
+                    <Typography className={paper.typography} variant="subtitle2" gutterBottom>
+                      {" "}
+                      {place.name}
+                    </Typography>
+                    <img
+                      className={pointer}
+                      src={
+                        place.photo
+                          ? place.photo.images.large.url
+                          : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg"
+                      }
+                      alt={place.name}
+                    />
+                    <Rating name="read-only" size="small" value={Number(place.rating)} readOnly />
+                  </Paper>
+                )}
+              </div>
+            ))}
+          </GoogleMapReact>
         </MapContainer>
       )}
     </>
