@@ -38,6 +38,21 @@ const App = () => {
   const [type, setType] = useState("restaurants");
   const [rating, setRating] = useState("");
 
+  const onPlaceChanged = (place) => {
+    console.log("Selected Place:", place);
+    // Update the coordinates state with the new place's coordinates
+    if (place.geometry) {
+      const { lat, lng } = place.geometry.location;
+      setCoordinates({ lat: lat(), lng: lng() });
+    } else {
+      console.log("No geometry data available for the selected place.");
+    }
+  };
+
+  const onLoad = (autocomplete) => {
+    console.log("Autocomplete Loaded:", autocomplete);
+  };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }) => {
       setCoordinates({ lat: latitude, lng: longitude });
@@ -67,7 +82,7 @@ const App = () => {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
 
-        <Header />
+        <Header onPlaceChanged={onPlaceChanged} onLoad={onLoad} />
         <Grid container spacing={3} style={{ width: "100%" }}>
           <Grid item xs={12} md={4}>
             <List
