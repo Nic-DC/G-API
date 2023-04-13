@@ -3,7 +3,7 @@ import GoogleMapReact from "google-map-react";
 import { Paper, Typography, useMediaQuery } from "@mui/material";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import Rating from "@mui/material/Rating";
-// import mapStyles from "../../mapStyles";
+import mapStyles from "../../mapStyles";
 
 import { MapContainer, markerContainer, paper, pointer } from "./styles";
 
@@ -23,6 +23,7 @@ const Map = ({ coordinates, setCoordinates, setBounds, places, setChildClicked }
             defaultZoom={14}
             margin={[50, 50, 50, 50]}
             // options={""}
+            options={{ disableDefaultUI: true, zoomControl: true, styles: mapStyles }}
             onChange={(e) => {
               console.log(`EVENT: `, e);
               setCoordinates({ lat: e.center.lat, lng: e.center.lng });
