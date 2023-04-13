@@ -29,8 +29,9 @@ const App = () => {
 
   const [bounds, setBounds] = useState({});
 
-  const [wheaterData, setWeatherData] = useState();
+  const [wheaterData, setWeatherData] = useState([]);
 
+  const [autocomplete, setAutocomplete] = useState(null);
   const [childClicked, setChildClicked] = useState(null);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -38,15 +39,11 @@ const App = () => {
   const [type, setType] = useState("restaurants");
   const [rating, setRating] = useState("");
 
-  const onPlaceChanged = (place) => {
-    console.log("Selected Place:", place);
-    // Update the coordinates state with the new place's coordinates
-    if (place.geometry) {
-      const { lat, lng } = place.geometry.location;
-      setCoordinates({ lat: lat(), lng: lng() });
-    } else {
-      console.log("No geometry data available for the selected place.");
-    }
+  const onPlaceChanged = () => {
+    const lat = autocomplete.getPlace().geometry.location.lat();
+    const lng = autocomplete.getPlace().geometry.location.lng();
+
+    setCoordinates({ lat, lng });
   };
 
   const onLoad = (autocomplete) => {
@@ -65,8 +62,9 @@ const App = () => {
   }, [rating]);
 
   useEffect(() => {
-    setIsLoading(true);
-    if (bounds.sw && bounds.ne) {
+    if (bounds) {
+      setIsLoading(true);
+
       const fetchData = async () => {
         const response = await getPlacesData(type, bounds.sw, bounds.ne);
         setPlaces(response.data.data?.filter((place) => place.name && place.num_reviews > 0));

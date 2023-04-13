@@ -10,23 +10,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { SearchBox, SearchIconWrapper, Input, ToolbarStyled } from "./styles";
 
 const Header = ({ onPlaceChanged, onLoad }) => {
-  const autocompleteRef = useRef(null);
-
-  useEffect(() => {
-    if (window.google) {
-      const autocomplete = new window.google.maps.places.Autocomplete(autocompleteRef.current);
-      autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        if (onPlaceChanged) {
-          onPlaceChanged(place);
-        }
-      });
-
-      if (onLoad) {
-        onLoad(autocomplete);
-      }
-    }
-  }, []);
   return (
     <AppBar position="static">
       <ToolbarStyled>
@@ -42,7 +25,7 @@ const Header = ({ onPlaceChanged, onLoad }) => {
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
-              <Input ref={autocompleteRef} placeholder="Search…" />
+              <Input placeholder="Search…" />
             </SearchBox>
           </Autocomplete>
         </Box>
